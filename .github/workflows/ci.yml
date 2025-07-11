@@ -27,16 +27,17 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go-version }}-
-            ${{ runner.os }}-go-
+      # Temporarily disable cache to debug issues
+      # - name: Cache Go modules
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.cache/go-build
+      #       ~/go/pkg/mod
+      #     key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-go-${{ matrix.go-version }}-
+      #       ${{ runner.os }}-go-
             
       - name: Download dependencies
         run: go mod download
@@ -63,17 +64,21 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
+      # Temporarily disable cache to debug issues
+      # - name: Cache Go modules
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.cache/go-build
+      #       ~/go/pkg/mod
+      #     key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-go-${{ env.GO_VERSION }}-
+      #       ${{ runner.os }}-go-
             
+      - name: Download dependencies
+        run: go mod download
+        
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -123,17 +128,21 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
+      # Temporarily disable cache to debug issues
+      # - name: Cache Go modules
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.cache/go-build
+      #       ~/go/pkg/mod
+      #     key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-go-${{ env.GO_VERSION }}-
+      #       ${{ runner.os }}-go-
             
+      - name: Download dependencies
+        run: go mod download
+        
       - name: Build binary
         env:
           GOOS: ${{ matrix.goos }}
@@ -161,10 +170,13 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           
+      - name: Download dependencies
+        run: go mod download
+          
       - name: Run Gosec Security Scanner
-        uses: securecodewarrior/github-action-gosec@master
-        with:
-          args: './...'
+        run: |
+          go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+          gosec ./...
           
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
