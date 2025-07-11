@@ -80,9 +80,9 @@ jobs:
         run: go mod download
         
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.55.2
+        run: |
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2
+          golangci-lint run
           
       - name: Check formatting
         run: |
@@ -149,7 +149,7 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           mkdir -p bin
-          make build
+          go build -o bin/bl ./cmd/bl
         
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
