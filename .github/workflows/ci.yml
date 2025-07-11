@@ -143,15 +143,6 @@ jobs:
       - name: Download dependencies
         run: go mod download
         
-      - name: Debug - List files
-        run: |
-          echo "Current directory contents:"
-          ls -la
-          echo "cmd directory contents:"
-          ls -la cmd/ || echo "cmd directory does not exist"
-          echo "cmd/bl directory contents:"
-          ls -la cmd/bl/ || echo "cmd/bl directory does not exist"
-        
       - name: Build binary
         env:
           GOOS: ${{ matrix.goos }}
