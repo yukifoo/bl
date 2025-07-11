@@ -17,7 +17,7 @@ GitHub CLI (gh)と同じコマンド体系・基本的な動作を持つBacklog�
 - [x] 基本的なディレクトリ構造作成
 - [x] 必要な依存関係の追加（cobra, viper, backlog等）
 - [x] Makefile作成
-- [ ] CI/CD設定（ビルド・テスト用GitHub Actions）
+- [x] CI/CD設定（ビルド・テスト用GitHub Actions）
 
 ### 1.2 認証システム
 - [ ] 認証コマンド実装（auth login/logout/status）

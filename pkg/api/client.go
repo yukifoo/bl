@@ -1,3 +1,4 @@
+// Package api provides Backlog API client functionality
 package api
 
 import (
