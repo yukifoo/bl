@@ -28,7 +28,6 @@ linters:
     - gocyclo
     - revive
     - bodyclose
-    - copyloopvar
     - funlen
     - gocognit
     - goheader
