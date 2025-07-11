@@ -1,0 +1,98 @@
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+    - misspell
+    - gocritic
+    - gosec
+    - unconvert
+    - dupl
+    - goconst
+    - gocyclo
+    - revive
+    - bodyclose
+    - copyloopvar
+    - funlen
+    - gocognit
+    - goheader
+    - goprintffuncname
+    - nolintlint
+    - rowserrcheck
+    - stylecheck
+    - typecheck
+    - unparam
+    - whitespace
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - unnecessaryDefer
+  
+  gosec:
+    excludes:
+      - G104 # Audit errors not checked
+      - G204 # Subprocess launched with variable
+  
+  funlen:
+    lines: 100
+    statements: 50
+  
+  gocognit:
+    min-complexity: 20
+  
+  revive:
+    rules:
+      - name: exported
+        disabled: false
+      - name: unexported-return
+        disabled: false
+      - name: unused-parameter
+        disabled: false
+
+issues:
+  exclude-use-default: false
+  exclude-dirs:
+    - vendor
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - dupl
+        - funlen
+        - gocognit
+    - path: cmd/
+      linters:
+        - gochecknoinits
+    - text: "Use of weak random number generator"
+      linters:
+        - gosec
+    - text: "Subprocess launched with variable"
+      linters:
+        - gosec
+  
+  max-issues-per-linter: 0
+  max-same-issues: 0

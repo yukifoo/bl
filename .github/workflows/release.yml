@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  GO_VERSION: '1.24'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+            
+      - name: Run tests
+        run: make test
+        
+      - name: Build binaries
+        run: |
+          mkdir -p dist
+          
+          # Linux AMD64
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/bl-linux-amd64 ./cmd/bl
+          
+          # Linux ARM64
+          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/bl-linux-arm64 ./cmd/bl
+          
+          # macOS AMD64
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/bl-darwin-amd64 ./cmd/bl
+          
+          # macOS ARM64
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/bl-darwin-arm64 ./cmd/bl
+          
+          # Windows AMD64
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/bl-windows-amd64.exe ./cmd/bl
+          
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+          
+      - name: Create archives
+        run: |
+          cd dist
+          
+          # Linux AMD64
+          tar -czf bl-linux-amd64.tar.gz bl-linux-amd64
+          
+          # Linux ARM64
+          tar -czf bl-linux-arm64.tar.gz bl-linux-arm64
+          
+          # macOS AMD64
+          tar -czf bl-darwin-amd64.tar.gz bl-darwin-amd64
+          
+          # macOS ARM64
+          tar -czf bl-darwin-arm64.tar.gz bl-darwin-arm64
+          
+          # Windows AMD64
+          zip bl-windows-amd64.zip bl-windows-amd64.exe
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/bl-linux-amd64.tar.gz
+            dist/bl-linux-arm64.tar.gz
+            dist/bl-darwin-amd64.tar.gz
+            dist/bl-darwin-arm64.tar.gz
+            dist/bl-windows-amd64.zip
+            dist/checksums.txt
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
