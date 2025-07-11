@@ -1,6 +1,8 @@
 package config
 
 import (
+	"errors"
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/viper"
@@ -20,7 +22,12 @@ func Load() (*Config, error) {
 	
 	// Add config paths
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("$HOME/.config/bl")
+	
+	// Get user home directory and add config path
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		viper.AddConfigPath(filepath.Join(homeDir, ".config", "bl"))
+	}
 	viper.AddConfigPath("/etc/bl")
 	
 	// Environment variables
@@ -29,8 +36,14 @@ func Load() (*Config, error) {
 	
 	var config Config
 	if err := viper.ReadInConfig(); err != nil {
-		// Config file not found; create default
-		return &config, nil
+		// Check if it's a file not found error
+		var configFileNotFoundError viper.ConfigFileNotFoundError
+		if errors.As(err, &configFileNotFoundError) {
+			// Config file not found; create default
+			return &config, nil
+		}
+		// Other error occurred (permission, syntax, etc.)
+		return nil, err
 	}
 	
 	if err := viper.Unmarshal(&config); err != nil {
@@ -46,8 +59,19 @@ func (c *Config) Save() error {
 	viper.Set("api_key", c.APIKey)
 	viper.Set("space", c.Space)
 	
-	configDir := filepath.Join("$HOME", ".config", "bl")
+	// Get user home directory
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	
+	configDir := filepath.Join(homeDir, ".config", "bl")
 	configPath := filepath.Join(configDir, "config.yaml")
+	
+	// Create config directory if it doesn't exist
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return err
+	}
 	
 	return viper.WriteConfigAs(configPath)
 }
