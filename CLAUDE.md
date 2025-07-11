@@ -72,7 +72,34 @@ var cmdName = &cobra.Command{
 ## 現在の状況
 - フェーズ1: 基盤構築中
 - 設計ドキュメント: plan.md に記載
+- Claude Code統合完了（GitHub Actions）
 - 次のタスク: プロジェクト初期化とディレクトリ構造の作成
+
+## Claude Code統合
+
+### 使用方法
+このプロジェクトではClaude Codeが統合されており、以下の方法で利用できます：
+
+#### @claudeメンション
+- PRやissueのコメントで `@claude` とメンションすることでClaude Codeを呼び出し
+- 例: `@claude この関数のテストを書いて`
+
+#### 自動PRレビュー
+- 新しいPRが作成または更新されると自動的にClaude Codeがレビューを実行
+- コード品質、バグ、パフォーマンス、セキュリティの観点からフィードバック
+
+### 権限
+- Claude Codeは以下の権限を持ちます：
+  - `contents: read` - ファイル読み取り
+  - `pull-requests: write` - PRコメント投稿
+  - `issues: write` - issueコメント投稿
+  - `actions: read` - CI結果の確認
+
+### 利用できるツール
+- ファイル読み書き（Read, Write, Edit）
+- コード検索（Grep, Glob）
+- バッシュコマンド実行（制限あり）
+- PRコメント、レビュー投稿
 
 ## 開発時の注意点
 

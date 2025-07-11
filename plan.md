@@ -11,11 +11,13 @@ GitHub CLI (gh)と同じコマンド体系・基本的な動作を持つBacklog�
 ## フェーズ1: 基盤構築（Week 1-2）
 
 ### 1.1 プロジェクトセットアップ
+- [x] GitHubリポジトリ作成とプロジェクト初期化
+- [x] Claude Code統合（GitHub Actions）
 - [ ] Go プロジェクト初期化
 - [ ] 基本的なディレクトリ構造作成
 - [ ] 必要な依存関係の追加（cobra, viper, backlog等）
 - [ ] Makefile作成
-- [ ] CI/CD設定（GitHub Actions）
+- [ ] CI/CD設定（ビルド・テスト用GitHub Actions）
 
 ### 1.2 認証システム
 - [ ] 認証コマンド実装（auth login/logout/status）
@@ -193,10 +195,22 @@ GitHub CLI (gh)と同じコマンド体系・基本的な動作を持つBacklog�
 
 ## 次のステップ
 
-1. このプランのレビューと承認
-2. リポジトリ作成とプロジェクト初期化
-3. Week 1のタスク開始
-4. 週次進捗レビュー
+1. ✅ このプランのレビューと承認
+2. ✅ リポジトリ作成とプロジェクト初期化
+3. ✅ Claude Code統合（@claudeメンション、自動PRレビュー）
+4. Go プロジェクトの初期化とディレクトリ構造作成
+5. 週次進捗レビュー
+
+## 開発支援ツール
+
+### Claude Code統合済み
+- **@claudeメンション**: PRやissueでClaude Codeを呼び出し可能
+- **自動PRレビュー**: 新PR作成時の自動コードレビュー
+- **権限**: contents:read, pull-requests:write, issues:write, actions:read
+- **利用例**: 
+  - `@claude この関数のテストを書いて`
+  - `@claude パフォーマンスを改善して`
+  - `@claude ドキュメントを更新して`
 
 ---
 
