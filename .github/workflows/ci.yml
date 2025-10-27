@@ -152,7 +152,7 @@ jobs:
           go build -o bin/bl ./cmd/bl
         
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bl-${{ matrix.goos }}-${{ matrix.goarch }}
           path: bin/bl*
